@@ -19,9 +19,10 @@ async def back_main_menu_function_1(msg: types.Message, state: FSMContext):
 
 
 @dp.callback_query_handler(Text(equals=[back_main_menu, back_main_menu_ru, back_main_menu_en]), state='*')
-async def back_main_menu_function_1(msg: types.Message, state: FSMContext):
+async def back_main_menu_function_1(call: types.CallbackQuery, state: FSMContext):
     await state.finish()
-    await msg.answer(text=msg.text, reply_markup=await main_menu_buttons(msg.from_user.id))
+    await call.message.delete()
+    await call.message.answer(text=call.message.text, reply_markup=await main_menu_buttons(call.from_user.id))
 
 
 @dp.message_handler(CommandStart())
