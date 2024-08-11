@@ -27,7 +27,7 @@ async def back_main_menu_function_1(msg: types.Message, state: FSMContext):
 @dp.message_handler(CommandStart())
 async def start_handler(msg: types.Message, state: FSMContext):
     tg_user = json.loads(
-        requests.get(url=f"http://127.0.0.1:8000/api/telegram-users/chat_id/{msg.from_user.id}/").content)
+        requests.get(url=f"http://127.0.0.1:8002/api/telegram-users/chat_id/{msg.from_user.id}/").content)
     try:
         if tg_user['detail']:
             await state.set_state('language_1')
@@ -65,7 +65,7 @@ Ism-Familiya: {call.from_user.full_name}""", parse_mode='HTML')
         "full_name": call.from_user.full_name,
         'language': call.data.split('_')[-1]
     }
-    requests.post(url=f"http://127.0.0.1:8000/api/telegram-users/create/", data=data)
+    requests.post(url=f"http://127.0.0.1:8002/api/telegram-users/create/", data=data)
     if call.data.split("_")[-1] == 'uz':
         await call.message.answer(text="Hush kelibsiz 😊", reply_markup=await main_menu_buttons(call.from_user.id))
     elif call.data.split("_")[-1] == 'en':
@@ -93,14 +93,14 @@ Select a language""", reply_markup=await language_buttons())
 async def language_function_1(call: types.CallbackQuery, state: FSMContext):
     await state.finish()
     tg_user = json.loads(
-        requests.get(url=f"http://127.0.0.1:8000/api/telegram-users/chat_id/{call.from_user.id}/").content)
+        requests.get(url=f"http://127.0.0.1:8002/api/telegram-users/chat_id/{call.from_user.id}/").content)
     data = {
         "chat_id": str(call.from_user.id),
         "username": call.from_user.username,
         "full_name": call.from_user.full_name,
         "language": call.data.split("_")[-1]
     }
-    s = requests.put(url=f"http://127.0.0.1:8000/api/telegram-users/update/{tg_user['id']}/", data=data)
+    s = requests.put(url=f"http://127.0.0.1:8002/api/telegram-users/update/{tg_user['id']}/", data=data)
     await call.message.delete()
     if call.data.split("_")[-1] == 'uz':
         await call.message.answer(text="Til o'zgartirildi 🇺🇿", reply_markup=await main_menu_buttons(call.from_user.id))
